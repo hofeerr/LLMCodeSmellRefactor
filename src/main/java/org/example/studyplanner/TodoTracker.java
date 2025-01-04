@@ -7,6 +7,7 @@ import java.util.*;
 
 public class TodoTracker {
     private List<ToDo> toDos = new ArrayList<>();
+    private final List<ToDo> completedToDos = new ArrayList<>();
     private Map<Integer, List<LocalDateTime>> tracker;
     private Integer nextId;
     private static TodoTracker instance;
@@ -16,6 +17,17 @@ public class TodoTracker {
         this.tracker = new HashMap<>();
         this.toDos = new ArrayList<>();
         this.nextId = 1;
+    }
+
+    public void markCompleted(ToDo toDo) {
+        if (toDo != null && !completedToDos.contains(toDo)) {
+            completedToDos.add(toDo);
+            System.out.println("ToDo marked as completed: " + toDo.getTitle());
+        }
+    }
+
+    public List<ToDo> getCompletedToDos() {
+        return completedToDos;
     }
 
     public static TodoTracker getInstance() {
@@ -62,6 +74,7 @@ public class TodoTracker {
     public List<ToDo> getToDos() {
         return toDos;
     }
+
 
     public ToDo getToDoById(Integer id) {
         for (ToDo toDo : toDos) {

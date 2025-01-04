@@ -1,7 +1,7 @@
 {
   "formatVersion": 0,
   "pmdVersion": "7.9.0",
-  "timestamp": "2025-01-04T14:47:43.338-03:00",
+  "timestamp": "2025-01-04T18:06:09.020-03:00",
   "files": [
     {
       "filename": ".\\src\\main\\java\\org\\example\\studycards\\LeitnerSystem.java",
@@ -55,9 +55,9 @@
       "filename": ".\\src\\main\\java\\org\\example\\studyplanner\\HabitTracker.java",
       "violations": [
         {
-          "beginline": 57,
+          "beginline": 67,
           "begincolumn": 24,
-          "endline": 57,
+          "endline": 67,
           "endcolumn": 228,
           "description": "Avoid long parameter lists.",
           "rule": "ExcessiveParameterList",
@@ -84,28 +84,12 @@
       ]
     },
     {
-      "filename": ".\\src\\main\\java\\org\\example\\studyplanner\\ToDo.java",
-      "violations": [
-        {
-          "beginline": 5,
-          "begincolumn": 8,
-          "endline": 5,
-          "endcolumn": 13,
-          "description": "The class \u0027ToDo\u0027 is suspected to be a Data Class (WOC\u003d11.111%, NOPA\u003d0, NOAM\u003d8, WMC\u003d10)",
-          "rule": "DataClass",
-          "ruleset": "Design",
-          "priority": 3,
-          "externalInfoUrl": "https://docs.pmd-code.org/pmd-doc-7.9.0/pmd_rules_java_design.html#dataclass"
-        }
-      ]
-    },
-    {
       "filename": ".\\src\\main\\java\\org\\example\\studyplanner\\TodoTracker.java",
       "violations": [
         {
-          "beginline": 29,
+          "beginline": 41,
           "begincolumn": 19,
-          "endline": 29,
+          "endline": 41,
           "endcolumn": 27,
           "description": "The method \u0027toString()\u0027 has a NCSS line count of 21.",
           "rule": "NcssCount",

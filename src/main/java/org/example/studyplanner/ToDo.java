@@ -1,8 +1,9 @@
 package org.example.studyplanner;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 
-public class ToDo implements PlannerMaterial{
+public class ToDo implements PlannerMaterial {
     private Integer id;
     private String title;
     private String description;
@@ -20,6 +21,21 @@ public class ToDo implements PlannerMaterial{
         return MessageFormat.format("[(Priority:{3}) ToDo {0}: {1}, {2}]", id, title, description, priority);
     }
 
+    /**
+     * Adds domain logic to determine if the ToDo item is high priority.
+     */
+    public boolean isHighPriority() {
+        return priority > 7;
+    }
+
+    /**
+     * Updates the description with a timestamp (encapsulates description logic).
+     */
+    public void updateDescription(String newDescription) {
+        this.description = newDescription + " (Updated at: " + System.currentTimeMillis() + ")";
+    }
+
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -51,4 +67,20 @@ public class ToDo implements PlannerMaterial{
     public void setPriority(int priority) {
         this.priority = priority;
     }
+
+    /**
+     * Moves responsibility for tracking ToDo items to ToDoTracker.
+     */
+    public void markAsCompleted(TodoTracker tracker) {
+        tracker.markCompleted(this);
+    }
+
+    /**
+     * Encapsulates logic to assign this ToDo to a habit using HabitTracker.
+     */
+    public void assignToHabit(HabitTracker tracker, Habit habit) {
+        tracker.assignToHabit(this, habit);
+    }
+
+
 }

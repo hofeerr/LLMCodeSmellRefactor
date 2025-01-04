@@ -8,6 +8,7 @@ import java.util.*;
 public class HabitTracker {
     private List<Habit> habits;
     private Map<Integer, List<LocalDateTime>> tracker;
+    private final Map<Habit, List<ToDo>> habitToDos = new HashMap<>();
     private Integer nextId;
 
     private static HabitTracker instance;
@@ -38,6 +39,15 @@ public class HabitTracker {
         return this.habits.stream()
                 .filter(habit -> Objects.equals(habit.getId(), id))
                 .findFirst().orElse(null);
+    }
+
+    public void assignToHabit(ToDo toDo, Habit habit) {
+        habitToDos.computeIfAbsent(habit, k -> new ArrayList<>()).add(toDo);
+        System.out.println("ToDo '" + toDo.getTitle() + "' assigned to Habit: " + habit.getName());
+    }
+
+    public List<ToDo> getToDosForHabit(Habit habit) {
+        return habitToDos.getOrDefault(habit, new ArrayList<>());
     }
 
     public List<Habit> getHabits() {
