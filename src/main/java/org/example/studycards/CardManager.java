@@ -12,7 +12,7 @@ public class CardManager {
     private static CardManager instance = null;
 
     private CardManager() {
-        this.cards = new HashMap<Integer, Card>();
+        this.cards = new HashMap<>();
     }
 
     public static CardManager getCardManager() {
@@ -22,20 +22,15 @@ public class CardManager {
         return instance;
     }
 
-    public String formatCard(Integer id) {
-        Card card = this.getCard(id);
-        return "[id: " + id + "] " + "Question: " + card.getQuestion() + " Answer: " + card.getAnswer();
-    }
-
-    public Map<Integer, Card> getCardsMap(){
+    public Map<Integer, Card> getCardsMap() {
         return cards;
     }
 
     public List<Card> getCards() {
-        return new ArrayList<Card>(cards.values());
+        return new ArrayList<>(cards.values());
     }
 
-    public List<Card> getCards(List<Integer> ids){
+    public List<Card> getCards(List<Integer> ids) {
         List<Card> responseCards = new ArrayList<>();
         for (Integer id : ids) {
             Card card = cards.get(id);
@@ -51,9 +46,6 @@ public class CardManager {
     }
 
     public Integer addCard(String question, String answer) {
-        if(validateCard(question, answer)) {
-            throw new IllegalArgumentException("Invalid question or answer");
-        }
         Card card = new Card(question, answer);
         Integer response = nextID;
         cards.put(nextID, card);
@@ -66,26 +58,20 @@ public class CardManager {
     }
 
     public void updateCard(Integer id, String question, String answer) {
-        if(validateCard(question, answer)) {
-            throw new IllegalArgumentException("Invalid question or answer");
-        }
         Card card = cards.get(id);
-        card.edit(question, answer);
+        if (card != null) {
+            card.edit(question, answer);
+        }
     }
 
-    private boolean validateCard(String question, String answer) {
-        return question == null || question.isEmpty() || answer == null || answer.isEmpty();
-    }
-
-    public List<String> searchInCards(String search){
+    public List<String> searchInCards(String search) {
         List<String> responseCards = new ArrayList<>();
         for (int id : cards.keySet()) {
             Card card = cards.get(id);
-            if(card.getQuestion().contains(search) || card.getAnswer().contains(search)){
-                responseCards.add(formatCard(id));
+            if (card.getQuestion().contains(search) || card.getAnswer().contains(search)) {
+                responseCards.add(card.format(id));
             }
         }
         return responseCards;
     }
-
 }

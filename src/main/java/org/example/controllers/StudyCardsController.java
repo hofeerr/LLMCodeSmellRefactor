@@ -66,9 +66,13 @@ public class StudyCardsController {
     public void handleRandomFlashCard() {
         System.out.println("Random flash card:");
         Integer id = flashCard.randomFlashCard();
-        System.out.println(manager.formatCard(id));
+        Card card = manager.getCard(id); // Obter o cartão pelo ID
+        if (card != null) {
+            System.out.println(card.format(id)); // Chamar o método format na instância de Card
+        } else {
+            System.out.println("Card not found.");
+        }
     }
-
     public void handleInsertCardInBox(){
         System.out.println("Type card id:");
         int id = Integer.parseInt(getInput());

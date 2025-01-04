@@ -16,8 +16,13 @@ public class Box {
     public String toString() {
         CardManager manager = CardManager.getCardManager();
         StringBuilder response = new StringBuilder();
-        for (Integer card : cards) {
-            response.append(manager.formatCard(card)).append(System.lineSeparator());
+        for (Integer cardId : cards) { // Presumindo que 'cards' seja uma coleção de IDs de cartões
+            Card card = manager.getCard(cardId); // Obter a instância do cartão
+            if (card != null) {
+                response.append(card.format(cardId)).append(System.lineSeparator()); // Usar o método 'format' do Card
+            } else {
+                response.append("[id: ").append(cardId).append("] Card not found").append(System.lineSeparator());
+            }
         }
         return response.toString();
     }
