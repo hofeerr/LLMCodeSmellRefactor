@@ -12,7 +12,8 @@ import java.util.List;
 public class GeneralSearch implements Search<String> {
     private SearchLog searchLog = new SearchLog("General Search");
 
-    public GeneralSearch() {}
+    public GeneralSearch() {
+    }
 
     @Override
     public List<String> search(String text) {
@@ -30,11 +31,9 @@ public class GeneralSearch implements Search<String> {
         results.addAll(TodoTracker.getInstance().searchInTodos(text));
         results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
         results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
-
-        // Delegando o registro de logs para SearchLog
-        searchLog.logSearch(text);
-        results.add(searchLog.formatLogInfo());
-
+        this.searchLog.addSearchHistory(text);
+        this.searchLog.setNumUsages(this.searchLog.getNumUsages() + 1);
+        results.add("\nLogged in: " + this.searchLog.getLogName());
         return results;
     }
 }

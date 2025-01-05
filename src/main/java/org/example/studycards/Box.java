@@ -57,4 +57,9 @@ public class Box {
         int randomIndex = random.nextInt(cards.size());
         return cards.get(randomIndex);
     }
+
+    public boolean isEmpty() {
+        return cards.isEmpty(); // Retorna true se não houver cartões na caixa
+    }
+
 }

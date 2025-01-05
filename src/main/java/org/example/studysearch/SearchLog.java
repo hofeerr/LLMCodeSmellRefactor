@@ -17,6 +17,7 @@ public class SearchLog {
         this.isLocked = false;
     }
 
+    // Encapsulate adding a search term and updating its count
     public void logSearch(String term) {
         if (isLocked) {
             throw new IllegalStateException("Cannot log searches; the log is locked.");
@@ -27,24 +28,17 @@ public class SearchLog {
         numUsages++;
     }
 
-    // Método restaurado para compatibilidade
-    public void addSearchHistory(String query) {
-        searchHistory.add(query);
-    }
-
-    // Método restaurado para compatibilidade
-    public void setNumUsages(int numUsages) {
-        this.numUsages = numUsages;
-    }
-
+    // Encapsulate retrieval of search history, protecting internal list
     public List<String> getSearchHistory() {
         return Collections.unmodifiableList(searchHistory);
     }
 
+    // Retrieve the count of a specific search term
     public int getSearchCount(String term) {
         return searchCount.getOrDefault(term, 0);
     }
 
+    // Retrieve the most searched term(s)
     public List<String> getTopSearches() {
         int maxCount = searchCount.values().stream().max(Integer::compareTo).orElse(0);
         List<String> topSearches = new ArrayList<>();
@@ -56,6 +50,7 @@ public class SearchLog {
         return topSearches;
     }
 
+    // Toggle locking/unlocking the log
     public void lock() {
         isLocked = true;
     }
@@ -64,14 +59,17 @@ public class SearchLog {
         isLocked = false;
     }
 
+    // Retrieve number of usages
     public int getNumUsages() {
         return numUsages;
     }
 
+    // Retrieve log name
     public String getLogName() {
         return logName;
     }
 
+    // Update log name with validation
     public void setLogName(String logName) {
         if (logName == null || logName.isBlank()) {
             throw new IllegalArgumentException("Log name cannot be null or blank.");
@@ -79,7 +77,11 @@ public class SearchLog {
         this.logName = logName;
     }
 
-    public String formatLogInfo() {
-        return "\nLogged in: " + logName;
+    public void addSearchHistory(String query) {
+        searchHistory.add(query);
+    }
+
+    public void setNumUsages(int numUsages) {
+        this.numUsages = numUsages;
     }
 }
