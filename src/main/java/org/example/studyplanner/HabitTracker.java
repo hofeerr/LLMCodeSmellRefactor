@@ -79,7 +79,6 @@ public class HabitTracker {
         return addHabit(stringProperties.get(0), stringProperties.get(1), intProperties.get(0), intProperties.get(1), intProperties.get(2), intProperties.get(3), intProperties.get(4), intProperties.get(5), intProperties.get(6), intProperties.get(7), isConcluded);
     }
 
-
     public int addHabit(String name, String motivation) {
 
         Habit habit = new Habit(name, motivation, this.nextId);
@@ -121,4 +120,19 @@ public class HabitTracker {
         return habits;
     }
 
+    // Método Movido: getFormattedHabitView
+    public String getFormattedHabitView() {
+        StringBuilder response = new StringBuilder();
+        for (Habit habit : habits) {
+            response.append("[ Habit: ")
+                    .append(habit.getName())
+                    .append(". Records: ");
+            List<LocalDateTime> records = getHabitRecords(habit.getId());
+            for (LocalDateTime record : records) {
+                response.append(formatHabitDate(record)).append(", ");
+            }
+            response.append("]");
+        }
+        return response.toString();
+    }
 }
