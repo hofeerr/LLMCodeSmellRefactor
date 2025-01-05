@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegistrySearch implements Search<String> {
-    private final SearchLog searchLog = new SearchLog("Registry Search");
+    private SearchLog searchLog = new SearchLog("Registry Search");
 
     public RegistrySearch() {}
 
@@ -24,15 +24,19 @@ public class RegistrySearch implements Search<String> {
 
     private List<String> handleRegistrySearch(String text) {
         List<String> results = new ArrayList<>();
+
+        // Realizando as buscas em diferentes fontes
         results.addAll(CardManager.getCardManager().searchInCards(text));
         results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
         results.addAll(TodoTracker.getInstance().searchInTodos(text));
         results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
 
-        // Usar o método logSearch da classe SearchLog
-        this.searchLog.logSearch(text);
+        // Usando os métodos restaurados para compatibilidade com testes
+        this.searchLog.addSearchHistory(text);
+        this.searchLog.setNumUsages(this.searchLog.getNumUsages() + 1);
 
-        results.add("\nLogged in: " + this.searchLog.getLogName());
+        // Adicionando informações do log aos resultados
+        results.add(searchLog.formatLogInfo());
         return results;
     }
 }

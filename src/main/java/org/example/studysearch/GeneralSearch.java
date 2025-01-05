@@ -19,25 +19,22 @@ public class GeneralSearch implements Search<String> {
         return handleSearch(text);
     }
 
-    public SearchLog getSearchLog(){
+    public SearchLog getSearchLog() {
         return searchLog;
     }
 
-    private List<String> handleSearch(String text){
+    private List<String> handleSearch(String text) {
         List<String> results = new ArrayList<>();
         results.addAll(CardManager.getCardManager().searchInCards(text));
         results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
         results.addAll(TodoTracker.getInstance().searchInTodos(text));
         results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
         results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
-        this.searchLog.addSearchHistory(text);
-        this.searchLog.setNumUsages(this.searchLog.getNumUsages() + 1);
-        results.add("\nLogged in: " + this.searchLog.getLogName());
+
+        // Delegando o registro de logs para SearchLog
+        searchLog.logSearch(text);
+        results.add(searchLog.formatLogInfo());
+
         return results;
     }
-
-
-
-
-
 }

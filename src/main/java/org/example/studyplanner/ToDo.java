@@ -1,7 +1,9 @@
 package org.example.studyplanner;
 
 import java.text.MessageFormat;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class ToDo implements PlannerMaterial {
     private Integer id;
@@ -33,6 +35,28 @@ public class ToDo implements PlannerMaterial {
      */
     public void updateDescription(String newDescription) {
         this.description = newDescription + " (Updated at: " + System.currentTimeMillis() + ")";
+    }
+
+    /**
+     * Generates detailed information about the ToDo, including execution times.
+     */
+    public String getDetailedInfo(List<LocalDateTime> executionTimes) {
+        StringBuilder str = new StringBuilder();
+        str.append(toString()).append("\n");
+        if (executionTimes == null || executionTimes.isEmpty()) {
+            str.append("No tracks found\n");
+        } else {
+            for (LocalDateTime dateTime : executionTimes) {
+                str.append(formatDate(dateTime)).append("\n");
+            }
+        }
+        return str.toString();
+    }
+
+    private String formatDate(LocalDateTime dateTime) {
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return formatter.format(dateTime);
     }
 
     // Getters and setters
@@ -81,6 +105,4 @@ public class ToDo implements PlannerMaterial {
     public void assignToHabit(HabitTracker tracker, Habit habit) {
         tracker.assignToHabit(this, habit);
     }
-
-
 }

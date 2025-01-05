@@ -1,9 +1,7 @@
 package org.example.studyplanner;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
 
 public class TodoTracker {
     private List<ToDo> toDos = new ArrayList<>();
@@ -11,7 +9,6 @@ public class TodoTracker {
     private Map<Integer, List<LocalDateTime>> tracker;
     private Integer nextId;
     private static TodoTracker instance;
-
 
     private TodoTracker() {
         this.tracker = new HashMap<>();
@@ -41,35 +38,14 @@ public class TodoTracker {
     public String toString() {
         StringBuilder str = new StringBuilder();
         for (ToDo toDo : toDos) {
-            appendToDoDetails(str, toDo);
+            List<LocalDateTime> executionTimes = tracker.get(toDo.getId());
+            str.append(toDo.getDetailedInfo(executionTimes));
         }
         String response = str.toString();
         return response.isEmpty() ? "No ToDos found" : response;
     }
 
-    private void appendToDoDetails(StringBuilder str, ToDo toDo) {
-        str.append(toDo.toString()).append("\n");
-        appendToDoExecutionTimes(str, toDo.getId());
-    }
-
-    private void appendToDoExecutionTimes(StringBuilder str, Integer id) {
-        List<LocalDateTime> todosDate = this.tracker.get(id);
-        if (todosDate == null) {
-            str.append("No tracks found\n");
-        } else {
-            for (LocalDateTime ldt : todosDate) {
-                str.append(formatDate(ldt)).append("\n");
-            }
-        }
-    }
-
-    private String formatDate(LocalDateTime dateTime) {
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        return formatter.format(dateTime);
-    }
-
-    public void addToDoExecutionTime(Integer id){
+    public void addToDoExecutionTime(Integer id) {
         List<LocalDateTime> et = tracker.computeIfAbsent(id, k -> new ArrayList<>());
         LocalDateTime now = LocalDateTime.now();
         et.add(now);
@@ -78,7 +54,6 @@ public class TodoTracker {
     public List<ToDo> getToDos() {
         return toDos;
     }
-
 
     public ToDo getToDoById(Integer id) {
         for (ToDo toDo : toDos) {
@@ -115,5 +90,4 @@ public class TodoTracker {
         }
         return todos;
     }
-
 }
