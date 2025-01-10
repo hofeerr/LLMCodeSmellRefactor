@@ -8,7 +8,6 @@ import org.example.studyregistry.StudyTaskManager;
 
 import java.util.*;
 
-
 public class SearchLog {
     private final List<String> searchHistory;
     private final Map<String, Integer> searchCount;
@@ -24,7 +23,6 @@ public class SearchLog {
         this.isLocked = false;
     }
 
-    // Método movido e refatorado de GeneralSearch
     public List<String> handleSearch(String text) {
         if (isLocked) {
             throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
@@ -36,12 +34,23 @@ public class SearchLog {
         results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
         results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
 
-        logSearch(text); // Usa o método encapsulado para registrar buscas
+        logSearch(text);
         results.add("\nLogged in: " + this.logName);
         return results;
     }
 
-    // Encapsulate adding a search term and updating its count
+    public List<String> handleMaterialSearch(String text) {
+        if (isLocked) {
+            throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
+        }
+        List<String> results = new ArrayList<>();
+        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+
+        logSearch(text);
+        results.add("\nLogged in: " + this.logName);
+        return results;
+    }
+
     public void logSearch(String term) {
         if (isLocked) {
             throw new IllegalStateException("Cannot log searches; the log is locked.");
@@ -52,18 +61,14 @@ public class SearchLog {
         numUsages++;
     }
 
-
-    // Encapsulate retrieval of search history, protecting internal list
     public List<String> getSearchHistory() {
         return Collections.unmodifiableList(searchHistory);
     }
 
-    // Retrieve the count of a specific search term
     public int getSearchCount(String term) {
         return searchCount.getOrDefault(term, 0);
     }
 
-    // Retrieve the most searched term(s)
     public List<String> getTopSearches() {
         int maxCount = searchCount.values().stream().max(Integer::compareTo).orElse(0);
         List<String> topSearches = new ArrayList<>();
@@ -75,7 +80,6 @@ public class SearchLog {
         return topSearches;
     }
 
-    // Toggle locking/unlocking the log
     public void lock() {
         isLocked = true;
     }
@@ -84,17 +88,14 @@ public class SearchLog {
         isLocked = false;
     }
 
-    // Retrieve number of usages
     public int getNumUsages() {
         return numUsages;
     }
 
-    // Retrieve log name
     public String getLogName() {
         return logName;
     }
 
-    // Update log name with validation
     public void setLogName(String logName) {
         if (logName == null || logName.isBlank()) {
             throw new IllegalArgumentException("Log name cannot be null or blank.");
