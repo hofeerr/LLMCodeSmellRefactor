@@ -6,7 +6,11 @@ import org.example.studyplanner.TodoTracker;
 import org.example.studyregistry.StudyMaterial;
 import org.example.studyregistry.StudyTaskManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SearchLog {
     private final List<String> searchHistory;
@@ -45,6 +49,21 @@ public class SearchLog {
         }
         List<String> results = new ArrayList<>();
         results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+
+        logSearch(text);
+        results.add("\nLogged in: " + this.logName);
+        return results;
+    }
+
+    public List<String> handleRegistrySearch(String text) {
+        if (isLocked) {
+            throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
+        }
+        List<String> results = new ArrayList<>();
+        results.addAll(CardManager.getCardManager().searchInCards(text));
+        results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
+        results.addAll(TodoTracker.getInstance().searchInTodos(text));
+        results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
 
         logSearch(text);
         results.add("\nLogged in: " + this.logName);
