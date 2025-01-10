@@ -49,6 +49,14 @@ public class LeitnerSystem extends StudyMethod {
         return boxes;
     }
 
+    public String getRandomCardFromAllBoxes() {
+        StringBuilder response = new StringBuilder();
+        response.append(getMethodName()).append("\n");
+        List<Box> boxes = getBoxes();
+        response.append(getRandomCard(boxes));
+        return response.toString();
+    }
+
     public String getRandomCard(List<Box> otherBoxes) {
         if (isInvalidBoxList(otherBoxes)) {
             return null;
