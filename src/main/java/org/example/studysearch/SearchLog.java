@@ -1,6 +1,13 @@
 package org.example.studysearch;
 
+import org.example.studycards.CardManager;
+import org.example.studyplanner.HabitTracker;
+import org.example.studyplanner.TodoTracker;
+import org.example.studyregistry.StudyMaterial;
+import org.example.studyregistry.StudyTaskManager;
+
 import java.util.*;
+
 
 public class SearchLog {
     private final List<String> searchHistory;
@@ -17,6 +24,23 @@ public class SearchLog {
         this.isLocked = false;
     }
 
+    // Método movido e refatorado de GeneralSearch
+    public List<String> handleSearch(String text) {
+        if (isLocked) {
+            throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
+        }
+        List<String> results = new ArrayList<>();
+        results.addAll(CardManager.getCardManager().searchInCards(text));
+        results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
+        results.addAll(TodoTracker.getInstance().searchInTodos(text));
+        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+        results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
+
+        logSearch(text); // Usa o método encapsulado para registrar buscas
+        results.add("\nLogged in: " + this.logName);
+        return results;
+    }
+
     // Encapsulate adding a search term and updating its count
     public void logSearch(String term) {
         if (isLocked) {
@@ -27,6 +51,7 @@ public class SearchLog {
         searchCount.put(term, searchCount.getOrDefault(term, 0) + 1);
         numUsages++;
     }
+
 
     // Encapsulate retrieval of search history, protecting internal list
     public List<String> getSearchHistory() {
