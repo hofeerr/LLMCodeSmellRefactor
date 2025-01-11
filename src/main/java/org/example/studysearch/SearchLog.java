@@ -28,53 +28,66 @@ public class SearchLog {
     }
 
     public List<String> handleSearch(String text) {
-        if (isLocked) {
-            throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
-        }
-        List<String> results = new ArrayList<>();
-        results.addAll(CardManager.getCardManager().searchInCards(text));
-        results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
-        results.addAll(TodoTracker.getInstance().searchInTodos(text));
-        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
-        results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
-
+        ensureUnlocked();
+        List<String> results = gatherAllSearchResults(text);
         logSearch(text);
-        results.add("\nLogged in: " + this.logName);
+        appendLogNameToResults(results);
         return results;
     }
 
     public List<String> handleMaterialSearch(String text) {
-        if (isLocked) {
-            throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
-        }
-        List<String> results = new ArrayList<>();
-        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
-
+        ensureUnlocked();
+        List<String> results = gatherMaterialSearchResults(text);
         logSearch(text);
-        results.add("\nLogged in: " + this.logName);
+        appendLogNameToResults(results);
         return results;
     }
 
     public List<String> handleRegistrySearch(String text) {
+        ensureUnlocked();
+        List<String> results = gatherRegistrySearchResults(text);
+        logSearch(text);
+        appendLogNameToResults(results);
+        return results;
+    }
+
+    private void ensureUnlocked() {
         if (isLocked) {
             throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
         }
+    }
+
+    private List<String> gatherAllSearchResults(String text) {
+        List<String> results = new ArrayList<>();
+        results.addAll(CardManager.getCardManager().searchInCards(text));
+        results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
+        results.addAll(TodoTracker.getInstance().searchInTodos(text));
+        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+        results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
+        return results;
+    }
+
+    private List<String> gatherMaterialSearchResults(String text) {
+        List<String> results = new ArrayList<>();
+        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+        return results;
+    }
+
+    private List<String> gatherRegistrySearchResults(String text) {
         List<String> results = new ArrayList<>();
         results.addAll(CardManager.getCardManager().searchInCards(text));
         results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
         results.addAll(TodoTracker.getInstance().searchInTodos(text));
         results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
-
-        logSearch(text);
-        results.add("\nLogged in: " + this.logName);
         return results;
     }
 
-    public void logSearch(String term) {
-        if (isLocked) {
-            throw new IllegalStateException("Cannot log searches; the log is locked.");
-        }
+    private void appendLogNameToResults(List<String> results) {
+        results.add("\nLogged in: " + this.logName);
+    }
 
+    public void logSearch(String term) {
+        ensureUnlocked();
         searchHistory.add(term);
         searchCount.put(term, searchCount.getOrDefault(term, 0) + 1);
         numUsages++;
