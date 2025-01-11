@@ -153,13 +153,37 @@ public class StudyRegistryController {
 
     private void handleSetSteps(StudyPlan studyPlan) {
         handleMethodHeader("(Study Plan Edit)");
-        System.out.println("Type the following info: String firstStep, String resetStudyMechanism, String consistentStep, " +
-                "String seasonalSteps, String basicSteps, String mainObjectiveTitle, String mainGoalTitle, String mainMaterialTopic, " +
-                "String mainTask, @NotNull  Integer numberOfSteps, boolean isImportant. " +
-                "The Date to start is today, the date to end is x days from now, type the quantity of days\n");
-        LocalDateTime createdAT = LocalDateTime.now();
-        studyPlan.assignSteps(getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(),
-                Integer.parseInt(getInput()), Boolean.parseBoolean(getInput()), createdAT, createdAT.plusDays(Long.parseLong(getInput())));
+
+        try {
+            System.out.println("Type the following info: String firstStep, String resetStudyMechanism, String consistentStep, " +
+                    "String seasonalSteps, String basicSteps, String mainObjectiveTitle, String mainGoalTitle, String mainMaterialTopic, " +
+                    "String mainTask, Integer numberOfSteps, boolean isImportant. " +
+                    "The Date to start is today, the date to end is x days from now, type the quantity of days\n");
+
+            LocalDateTime createdAt = LocalDateTime.now();
+
+            // Criação de StepDetails diretamente
+            StudyPlan.StepDetails stepDetails = new StudyPlan.StepDetails(
+                    getInput(), // firstStep
+                    getInput(), // resetStudyMechanism
+                    getInput(), // consistentStep
+                    getInput(), // seasonalSteps
+                    getInput(), // basicSteps
+                    getInput(), // mainObjectiveTitle
+                    getInput(), // mainGoalTitle
+                    getInput(), // mainMaterialTopic
+                    getInput(), // mainTask
+                    promptInt("Number of Steps: "),
+                    promptBoolean("Is it important? (true/false): "),
+                    createdAt,
+                    createdAt.plusDays(promptInt("Number of days to end the task: "))
+            );
+
+            // Adicionar os passos ao plano
+            studyPlan.assignSteps(stepDetails);
+        } catch (Exception e) {
+            System.out.println("Error setting steps: " + e.getMessage());
+        }
     }
 
     private StudyGoal getStudyGoalInfo() {
