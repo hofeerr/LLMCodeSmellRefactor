@@ -265,9 +265,66 @@ public class StudyRegistryController {
     }
 
     private void getWeekInfo() {
-        System.out
-                .println("(Study Task Manager Week Set Up) Type the following info: String planName, String objectiveTitle, String objectiveDescription, String materialTopic, String materialFormat, String goal, String reminderTitle, String reminderDescription, String mainTaskTitle, String mainHabit, String mainCardStudy");
-        studyTaskManager.setUpWeek(getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput());
+        System.out.println("(Study Task Manager Week Set Up) Type the following info: ");
+        System.out.println("String planName, String objectiveTitle, String objectiveDescription, String materialTopic, String materialFormat, String goal, String reminderTitle, String reminderDescription, String mainTaskTitle, String mainHabit, String mainCardStudy");
+
+        // Coleta os dados e cria o objeto WeekSetup
+        StudyTaskManager.WeekSetup weekSetup = collectAndBuildWeekSetup();
+
+        // Passa o objeto para o método setUpWeek
+        studyTaskManager.setUpWeek(weekSetup);
+    }
+
+    private StudyTaskManager.WeekSetup collectAndBuildWeekSetup() {
+        // Coleta os inputs
+        List<String> inputs = collectInputs();
+
+        // Cria o objeto WeekSetup com os dados coletados
+        return buildWeekSetup(inputs);
+    }
+
+    private List<String> collectInputs() {
+        List<String> inputs = new ArrayList<>();
+        inputs.addAll(collectPrimaryInputs());
+        inputs.addAll(collectSecondaryInputs());
+        return inputs;
+    }
+
+    private List<String> collectPrimaryInputs() {
+        List<String> inputs = new ArrayList<>();
+        inputs.add(getInput()); // planName
+        inputs.add(getInput()); // objectiveTitle
+        inputs.add(getInput()); // objectiveDescription
+        inputs.add(getInput()); // materialTopic
+        inputs.add(getInput()); // materialFormat
+        return inputs;
+    }
+
+    private List<String> collectSecondaryInputs() {
+        List<String> inputs = new ArrayList<>();
+        inputs.add(getInput()); // goal
+        inputs.add(getInput()); // reminderTitle
+        inputs.add(getInput()); // reminderDescription
+        inputs.add(getInput()); // mainTaskTitle
+        inputs.add(getInput()); // mainHabit
+        inputs.add(getInput()); // mainCardStudy
+        return inputs;
+    }
+
+    private StudyTaskManager.WeekSetup buildWeekSetup(List<String> inputs) {
+        return new StudyTaskManager.WeekSetup(
+                inputs.get(0), // planName
+                inputs.get(1), // objectiveTitle
+                inputs.get(2), // objectiveDescription
+                inputs.get(3), // materialTopic
+                inputs.get(4), // materialFormat
+                inputs.get(5), // goal
+                inputs.get(6), // reminderTitle
+                inputs.get(7), // reminderDescription
+                inputs.get(8), // mainTaskTitle
+                inputs.get(9), // mainHabit
+                inputs.get(10) // mainCardStudy
+        );
     }
 
     private void handleSetUpWeek() {
