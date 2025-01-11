@@ -1,24 +1,8 @@
 {
   "formatVersion": 0,
   "pmdVersion": "7.9.0",
-  "timestamp": "2025-01-10T18:52:37.088-03:00",
+  "timestamp": "2025-01-11T13:49:18.220-03:00",
   "files": [
-    {
-      "filename": "./src/main/java/org/example/studyplanner/HabitTracker.java",
-      "violations": [
-        {
-          "beginline": 67,
-          "begincolumn": 24,
-          "endline": 67,
-          "endcolumn": 228,
-          "description": "Avoid long parameter lists.",
-          "rule": "ExcessiveParameterList",
-          "ruleset": "Design",
-          "priority": 3,
-          "externalInfoUrl": "https://docs.pmd-code.org/pmd-doc-7.9.0/pmd_rules_java_design.html#excessiveparameterlist"
-        }
-      ]
-    },
     {
       "filename": "./src/main/java/org/example/studyregistry/StudyObjective.java",
       "violations": [
