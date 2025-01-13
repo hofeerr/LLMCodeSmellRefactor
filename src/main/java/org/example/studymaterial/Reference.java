@@ -9,10 +9,39 @@ public abstract class Reference {
     private boolean isDownloadable;
     private int rating;
     private String language;
-    private int viewCount;
-    private int downloadCount;
-    private int shareCount;
 
+    private InteractionStatistics interactionStatistics;
+
+    public Reference() {
+        this.interactionStatistics = new InteractionStatistics();
+    }
+
+    // Encapsulate logic related to interaction statistics
+    public void incrementViewCount() {
+        interactionStatistics.incrementViewCount();
+    }
+
+    public void incrementDownloadCount() {
+        interactionStatistics.incrementDownloadCount();
+    }
+
+    public void incrementShareCount() {
+        interactionStatistics.incrementShareCount();
+    }
+
+    public int getViewCount() {
+        return interactionStatistics.getViewCount();
+    }
+
+    public int getDownloadCount() {
+        return interactionStatistics.getDownloadCount();
+    }
+
+    public int getShareCount() {
+        return interactionStatistics.getShareCount();
+    }
+
+    // Getters and Setters for Reference attributes
     public void setTitle(String title) {
         this.title = title;
     }
@@ -53,7 +82,7 @@ public abstract class Reference {
         this.license = license;
     }
 
-    public boolean getIsDownloadable() {
+    public boolean isDownloadable() {
         return isDownloadable;
     }
 
@@ -77,27 +106,49 @@ public abstract class Reference {
         this.language = language;
     }
 
-    public int getViewCount() {
-        return viewCount;
+    public InteractionStatistics getInteractionStatistics() {
+        return interactionStatistics;
     }
+
+    public boolean getIsDownloadable() {
+        return isDownloadable();
+    }
+}
+
+class InteractionStatistics {
+    private int viewCount;
+    private int downloadCount;
+    private int shareCount;
 
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
+    }
+
+    public void setShareCount(int shareCount) {
+        this.shareCount = shareCount;
+    }
+
+    public void incrementViewCount() {
+        viewCount++;
+    }
+
+    public void incrementDownloadCount() {
+        downloadCount++;
+    }
+
+    public void incrementShareCount() {
+        shareCount++;
+    }
+
+    public int getViewCount() {
+        return viewCount;
     }
 
     public int getDownloadCount() {
         return downloadCount;
     }
 
-    public void setDownloadCount(int downloadCount) {
-        this.downloadCount = downloadCount;
-    }
-
     public int getShareCount() {
         return shareCount;
-    }
-
-    public void setShareCount(int shareCount) {
-        this.shareCount = shareCount;
     }
 }

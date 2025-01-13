@@ -26,32 +26,62 @@ public class StudyGoal extends Registry{
         this.isCompleted = completed;
     }
 
-    public String setGoalSummary(){
+    public String setGoalSummary() {
         StringBuilder summary = new StringBuilder();
-        summary.append("Goal Summary:\n").append("\n\n");
-        if(this.isActive){
+
+        appendHeader(summary);
+        appendActiveGoal(summary);
+        appendCompletedGoal(summary);
+        appendRequirements(summary);
+        appendPlan(summary);
+        appendObjective(summary);
+
+        this.summary = summary.toString();
+        return this.summary;
+    }
+
+    private void appendHeader(StringBuilder summary) {
+        summary.append("Goal Summary:\n\n");
+    }
+
+    private void appendActiveGoal(StringBuilder summary) {
+        if (this.isActive) {
             summary.append("Active Goal:\n").append(goal).append("\n\n");
         }
-        if(this.isCompleted){
+    }
+
+    private void appendCompletedGoal(StringBuilder summary) {
+        if (this.isCompleted) {
             summary.append("Completed Goal:\n").append(goal).append("\n\n");
         }
-        if(this.goalRequirements != null){
+    }
+
+    private void appendRequirements(StringBuilder summary) {
+        if (this.goalRequirements != null && !this.goalRequirements.isEmpty()) {
             summary.append("Requirements:\n");
-            for(String requirement : this.goalRequirements){
+            for (String requirement : this.goalRequirements) {
                 summary.append(requirement).append(", ");
             }
+            // Remove trailing comma and space if present
+            if (summary.length() > 0) {
+                summary.setLength(summary.length() - 2);
+            }
+            summary.append("\n\n");
         }
-        if(this.studyPlan != null){
-            summary.append("Plan:\n");
-            summary.append(this.studyPlan.toString());
-        }
-        if(this.studyObjective != null){
-            summary.append("Objective:\n");
-            summary.append(this.studyObjective.toString());
-        }
-        this.summary = summary.toString();
-        return summary.toString();
     }
+
+    private void appendPlan(StringBuilder summary) {
+        if (this.studyPlan != null) {
+            summary.append("Plan:\n").append(this.studyPlan.toString()).append("\n\n");
+        }
+    }
+
+    private void appendObjective(StringBuilder summary) {
+        if (this.studyObjective != null) {
+            summary.append("Objective:\n").append(this.studyObjective.toString()).append("\n\n");
+        }
+    }
+
 
     public void addRequirement(String requirement){
         this.goalRequirements.add(requirement);

@@ -1,54 +1,127 @@
 package org.example.studysearch;
 
+import org.example.studycards.CardManager;
+import org.example.studyplanner.HabitTracker;
+import org.example.studyplanner.TodoTracker;
+import org.example.studyregistry.StudyMaterial;
+import org.example.studyregistry.StudyTaskManager;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SearchLog {
-    private List<String> searchHistory;
-    private Map<String, Integer> searchCount;
+    private final List<String> searchHistory;
+    private final Map<String, Integer> searchCount;
     private boolean isLocked;
-    private Integer numUsages;
+    private int numUsages;
     private String logName;
 
     public SearchLog(String logName) {
-        searchHistory = new ArrayList<>();
-        searchCount = new HashMap<>();
+        this.searchHistory = new ArrayList<>();
+        this.searchCount = new HashMap<>();
         this.logName = logName;
-        numUsages = 0;
+        this.numUsages = 0;
+        this.isLocked = false;
+    }
+
+    public List<String> handleSearch(String text) {
+        ensureUnlocked();
+        List<String> results = gatherAllSearchResults(text);
+        logSearch(text);
+        appendLogNameToResults(results);
+        return results;
+    }
+
+    public List<String> handleMaterialSearch(String text) {
+        ensureUnlocked();
+        List<String> results = gatherMaterialSearchResults(text);
+        logSearch(text);
+        appendLogNameToResults(results);
+        return results;
+    }
+
+    public List<String> handleRegistrySearch(String text) {
+        ensureUnlocked();
+        List<String> results = gatherRegistrySearchResults(text);
+        logSearch(text);
+        appendLogNameToResults(results);
+        return results;
+    }
+
+    private void ensureUnlocked() {
+        if (isLocked) {
+            throw new IllegalStateException("SearchLog is locked. Cannot perform a search.");
+        }
+    }
+
+    private List<String> gatherAllSearchResults(String text) {
+        List<String> results = new ArrayList<>();
+        results.addAll(CardManager.getCardManager().searchInCards(text));
+        results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
+        results.addAll(TodoTracker.getInstance().searchInTodos(text));
+        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+        results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
+        return results;
+    }
+
+    private List<String> gatherMaterialSearchResults(String text) {
+        List<String> results = new ArrayList<>();
+        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+        return results;
+    }
+
+    private List<String> gatherRegistrySearchResults(String text) {
+        List<String> results = new ArrayList<>();
+        results.addAll(CardManager.getCardManager().searchInCards(text));
+        results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
+        results.addAll(TodoTracker.getInstance().searchInTodos(text));
+        results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
+        return results;
+    }
+
+    private void appendLogNameToResults(List<String> results) {
+        results.add("\nLogged in: " + this.logName);
+    }
+
+    public void logSearch(String term) {
+        ensureUnlocked();
+        searchHistory.add(term);
+        searchCount.put(term, searchCount.getOrDefault(term, 0) + 1);
+        numUsages++;
+    }
+
+    public List<String> getSearchHistory() {
+        return Collections.unmodifiableList(searchHistory);
+    }
+
+    public int getSearchCount(String term) {
+        return searchCount.getOrDefault(term, 0);
+    }
+
+    public List<String> getTopSearches() {
+        int maxCount = searchCount.values().stream().max(Integer::compareTo).orElse(0);
+        List<String> topSearches = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : searchCount.entrySet()) {
+            if (entry.getValue() == maxCount) {
+                topSearches.add(entry.getKey());
+            }
+        }
+        return topSearches;
+    }
+
+    public void lock() {
+        isLocked = true;
+    }
+
+    public void unlock() {
         isLocked = false;
     }
-    public void addSearchHistory(String searchHistory) {
-        this.searchHistory.add(searchHistory);
-    }
-    public List<String> getSearchHistory() {
-        return searchHistory;
-    }
-    public void setSearchHistory(List<String> searchHistory) {
-        this.searchHistory = searchHistory;
-    }
-    public Map<String, Integer> getSearchCount() {
-        return searchCount;
-    }
-    public void setSearchCount(Map<String, Integer> searchCount) {
-        this.searchCount = searchCount;
-    }
 
-    public boolean isLocked() {
-        return isLocked;
-    }
-
-    public void setLocked(boolean locked) {
-        isLocked = locked;
-    }
-
-    public Integer getNumUsages() {
+    public int getNumUsages() {
         return numUsages;
-    }
-
-    public void setNumUsages(Integer numUsages) {
-        this.numUsages = numUsages;
     }
 
     public String getLogName() {
@@ -56,6 +129,17 @@ public class SearchLog {
     }
 
     public void setLogName(String logName) {
+        if (logName == null || logName.isBlank()) {
+            throw new IllegalArgumentException("Log name cannot be null or blank.");
+        }
         this.logName = logName;
+    }
+
+    public void addSearchHistory(String query) {
+        searchHistory.add(query);
+    }
+
+    public void setNumUsages(int numUsages) {
+        this.numUsages = numUsages;
     }
 }
